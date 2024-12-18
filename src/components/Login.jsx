@@ -1,24 +1,30 @@
 import { useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
+import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../utils/constants";
 
 const Login = () => {
   const [emailId, setEmailId] = useState("tauhid@gmail.com");
-  const [password, setPassword] = useState("Tauhid@123");
+  const [password, setPassword] = useState("Tauhid@12345");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:7777/api/auth/login",
+        `${BASE_URL}/api/auth/login`,
         {
           emailId,
           password,
         },
         { withCredentials: true }
       );
-      alert(res?.data?.message);
+      dispatch(addUser(res.data.data));
+      return navigate('/');
     } catch (error) {
       console.error(error);
-      alert(error?.response?.data?.message);
     }
   };
 
@@ -54,7 +60,9 @@ const Login = () => {
             </label>
           </div>
           <div className="card-actions justify-center m-2">
-            <button className="btn btn-primary" onClick={handleLogin}>Login</button>
+            <button className="btn btn-primary" onClick={handleLogin}>
+              Login
+            </button>
           </div>
         </div>
       </div>
