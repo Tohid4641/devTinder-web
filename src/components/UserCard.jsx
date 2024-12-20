@@ -10,6 +10,7 @@ const UserCard = ({user}) => {
             <div className="card-body">
                 <h2 className="card-title">{`${firstName} ${lastName}`}</h2>
                 <p>{age && gender && `${age} ${gender}`}</p>
+                <p>{about && `${about}`}</p>
                 <div className="card-actions justify-end">
                     <button className="btn btn-primary">Ignore</button>
                     <button className="btn btn-secondary">Interested</button>
