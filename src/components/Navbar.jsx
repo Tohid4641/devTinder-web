@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 const Navbar = () => {
   const user = useSelector((store) => store.user);
-  const connections = useSelector((store) => store.connections);
+  const requests = useSelector((store) => store.requests);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -60,12 +60,17 @@ const Navbar = () => {
               <li>
                 <Link to="/connections" className="justify-between">
                   Connections
-                  <span className="badge">{connections ? connections.length : 0}</span>
                 </Link>
               </li>
               <li>
-                <a>Settings</a>
+                <Link to="/requests" className="justify-between">
+                  Requests
+                  <span className="badge">
+                    {requests ? requests.length : 0}
+                  </span>
+                </Link>
               </li>
+
               <li>
                 <a onClick={handleLogout}>Logout</a>
               </li>

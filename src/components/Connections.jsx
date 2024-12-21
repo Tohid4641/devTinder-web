@@ -5,7 +5,6 @@ import { addConnections } from "../utils/connectionSlice";
 import { BASE_URL } from "../utils/constants";
 
 const Connections = () => {
-  const [error, setError] = useState("");
   const dispatch = useDispatch();
   const connections = useSelector((store) => store.connections) || [];
 
