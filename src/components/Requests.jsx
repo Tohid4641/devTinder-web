@@ -12,7 +12,7 @@ const Requests = () => {
 
   const reviewRequest = async (status, requestId) => {
     try {
-      const res = await axios.post(
+      await axios.post(
         `${BASE_URL}/api/request/review/${status}/${requestId}`,
         {},
         {

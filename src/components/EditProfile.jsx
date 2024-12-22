@@ -147,7 +147,7 @@ const EditProfile = ({ user }) => {
           </div>
         </div>
       </div>
-      <UserCard user={{ firstName, lastName, photoUrl, age, gender, about }} />
+      <UserCard user={{ firstName, lastName, photoUrl, age, gender, about }} route='profile' />
     </div>
   );
 };
