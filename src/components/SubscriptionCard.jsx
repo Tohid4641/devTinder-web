@@ -1,5 +1,7 @@
-const SubscriptionCard = ({ type }) => {
-
+const SubscriptionCard = ({ type, createPaymentOrder }) => {
+    const handlePayment = () => {
+        createPaymentOrder(type === 'gold' ? 700 : 300, type);
+    }
 
     return (
         <div className="card w-96 bg-base-100 shadow-sm">
@@ -37,7 +39,7 @@ const SubscriptionCard = ({ type }) => {
                     </li>
                 </ul>
                 <div className="mt-6">
-                    <button className="btn btn-primary btn-block">Subscribe</button>
+                    <button className="btn btn-primary btn-block" onClick={()=>handlePayment()}>Subscribe</button>
                 </div>
             </div>
         </div>
