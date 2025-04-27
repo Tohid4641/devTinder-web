@@ -1,7 +1,7 @@
 import axios from "axios";
 import SubscriptionCard from "./SubscriptionCard"
 import { BASE_URL } from "../utils/constants";
-import { use } from "react";
+import { use, useEffect, useState } from "react";
 
 const Subscription = () => {
     const [isUserPremium, setIsUserPremium] = useState(false);
