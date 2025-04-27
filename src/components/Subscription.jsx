@@ -2,9 +2,11 @@ import axios from "axios";
 import SubscriptionCard from "./SubscriptionCard"
 import { BASE_URL } from "../utils/constants";
 import { use, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Subscription = () => {
     const [isUserPremium, setIsUserPremium] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         verifyPremiumUser();
@@ -16,7 +18,7 @@ const Subscription = () => {
             console.log(res?.data?.data);
 
             if (res?.data?.data?.isPremium) {
-                setIsUserPremium(true);
+                setIsUserPremium(true);                
             } else {
                 setIsUserPremium(false);
             }

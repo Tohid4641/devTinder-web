@@ -42,6 +42,9 @@ const UserCard = ({ user, route }) => {
         <img src={photoUrl} alt="Profile photo" />
       </figure>
       <div className="card-body">
+        {user?.isPremium && (
+          <input type="checkbox" defaultChecked checked readOnly className="checkbox checkbox-primary" />
+        )}
         <h2 className="card-title">{`${firstName} ${lastName}`}</h2>
         {age && gender && <p>{age + ", " + gender}</p>}
         <p>{about && `${about}`}</p>
