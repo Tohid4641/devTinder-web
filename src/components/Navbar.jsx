@@ -63,6 +63,11 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/subscription" className="justify-between">
+                  Subscription
+                </Link>
+              </li>
+              <li>
                 <Link to="/requests" className="justify-between">
                   Requests
                   <span className="badge">
