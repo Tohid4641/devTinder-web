@@ -46,6 +46,9 @@ const Navbar = () => {
               <div className="w-10 rounded-full">
                 <img alt="Tailwind CSS Navbar component" src={user.photoUrl} />
               </div>
+              {user?.isPremium && (
+                <input type="checkbox" defaultChecked checked readOnly className="checkbox absolute top-8 size-3 checkbox-primary" />
+              )}
             </div>
             <ul
               tabIndex={0}

@@ -11,6 +11,7 @@ const EditProfile = ({ user }) => {
   const [photoUrl, setPhotoUrl] = useState(user.photoUrl || "");
   const [age, setAge] = useState(user.age || "");
   const [gender, setGender] = useState(user.gender || "");
+  const [isPremium, setIsPremium] = useState(user?.isPremium || false);
   const [genderDropdown, setGenderDropdown] = useState(false);
   const [about, setAbout] = useState(user.about || "");
   const [error, setError] = useState("");
@@ -147,7 +148,7 @@ const EditProfile = ({ user }) => {
           </div>
         </div>
       </div>
-      <UserCard user={{ firstName, lastName, photoUrl, age, gender, about }} route='profile' />
+      <UserCard user={{ firstName, lastName, photoUrl, age, gender, about, isPremium }} route='profile' />
     </div>
   );
 };

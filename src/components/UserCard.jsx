@@ -5,7 +5,8 @@ import { BASE_URL } from "../utils/constants";
 import { removeUserFromFeed } from "../utils/feedSlice";
 
 const UserCard = ({ user, route }) => {
-  const { _id, firstName, lastName, age, gender, photoUrl, about, skills } =
+  
+  const { _id, firstName, lastName, age, gender, photoUrl, about, skills, isPremium } =
     user;
   const [toast, setToast] = useState(false);
   const [toastText, setToastText] = useState("");
@@ -34,7 +35,7 @@ const UserCard = ({ user, route }) => {
     } catch (err) {
       console.log(err);
     }
-  };
+  }; 
 
   return (
     <div className="card bg-base-300 w-72 h-96 shadow-xl">
