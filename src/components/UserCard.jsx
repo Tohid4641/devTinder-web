@@ -44,7 +44,7 @@ const UserCard = ({ user, route }) => {
       </figure>
       <div className="card-body">
         {user?.isPremium && (
-          <input type="checkbox" defaultChecked checked readOnly className="checkbox checkbox-primary" />
+          <input type="checkbox" checked readOnly className="checkbox checkbox-primary" />
         )}
         <h2 className="card-title">{`${firstName} ${lastName}`}</h2>
         {age && gender && <p>{age + ", " + gender}</p>}
