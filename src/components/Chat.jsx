@@ -56,7 +56,21 @@ const Chat = () => {
         fetchChats();
     }, [targetUserId]);
 
+    useEffect(() => {
+        const socketClient = createSocketConnection();
+
+        socketClient.emit("joinChat", { firstName: user?.firstName, userId, targetUserId })
+        socketClient.on("receivedMessage", ({ firstName, userId, message }) => {
+            setMessages((messages) => [...messages, { firstName, userId, message }])
+        })
+
+        return () => {
+            socketClient.disconnect();
+        }
+    }, [userId, targetUserId]);
+
     if (!userId) return;
+
 
     const handleSendMessage = () => {
         if (sendMessage.trim() === "") return; // Prevent sending empty messages
