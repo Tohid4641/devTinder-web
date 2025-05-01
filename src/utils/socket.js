@@ -5,5 +5,5 @@ import Cookies from "js-cookie";
 
 export const createSocketConnection = () => {
     const token = Cookies.get("token");
-    return io(BASE_URL, { auth: { token } })
+    return io(BASE_URL, { auth: { token } });
 }

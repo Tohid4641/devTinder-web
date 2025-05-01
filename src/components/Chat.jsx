@@ -11,57 +11,19 @@ const Chat = () => {
     const userId = user?._id;
     const [messages, setMessages] = useState([]);
     const [sendMessage, setSendMessage] = useState("");
-    const [targetUser, setTargetUser] = useState({
-        _id: targetUserId,
-        firstName: "Unkown",
-        lastName: "User",
-        photoUrl: "https://t3.ftcdn.net/jpg/00/57/04/58/360_F_57045887_HHJml6DJVxNBMqMeDqVJ0ZQDnotp5rGD.jpg"
-    });
-
-    const fetchChats = async () => {
-        try {
-            const res = await axios.get(`${BASE_URL}/api/chat/${targetUserId}`, { withCredentials: true });
-            console.log(res.data.data);
-
-            const chatMessages = res?.data?.data[0]?.messages.map((message) => {
-                return {
-                    firstName: message?.senderId?.firstName,
-                    userId: message?.senderId?._id,
-                    message: message?.message
-                }
-            });
-            setMessages(chatMessages);
-
-            if (res?.data?.data[0]?.messages.length === 2) { // If there are only two messages, it means it's a one-on-one chat
-                res?.data?.data[0]?.participants?.map((participant) => {
-                    if (participant?._id !== userId) {
-                        setTargetUser(participant);
-                    }
-                })
-            } else if (res?.data?.data[0]?.messages.length > 2) { // If there are more than two messages, it means it's a group chat
-                setTargetUser({
-                    firstName: "Unkown",
-                    lastName: "Group",
-                    photoUrl: "https://img.freepik.com/premium-vector/question-icon-vector-illustration-group-people-isolated-background-question-mark-sign-concept_993513-103.jpg"
-                });
-            }
-
-
-        } catch (error) {
-            console.error("Error fetching chats:", error);
-        }
-    };
 
     useEffect(() => {
         fetchChats();
     }, [targetUserId]);
 
     useEffect(() => {
+        if (!userId) return;
+
         const socketClient = createSocketConnection();
 
         socketClient.emit("joinChat", { firstName: user?.firstName, userId, targetUserId })
         socketClient.on("receivedMessage", ({ firstName, userId, message }) => {
-            setMessages((messages) => [...messages, { firstName, userId, message }])
+            setMessages((messages) => [...messages, { senderId: userId, firstName, message }])
         })
 
         return () => {
@@ -69,7 +31,24 @@ const Chat = () => {
         }
     }, [userId, targetUserId]);
 
-    if (!userId) return;
+    const fetchChats = async () => {
+        try {
+            const res = await axios.get(`${BASE_URL}/api/chat/${targetUserId}`, { withCredentials: true });
+            // console.log(res.data.data);
+            const chatMessages = res?.data?.data[0]?.messages.map((message) => {
+                return {
+                    senderId: message?.senderId?._id,
+                    firstName: message?.senderId?.firstName,
+                    message: message?.message
+                }
+            });
+            setMessages(chatMessages);
+
+
+        } catch (error) {
+            console.error("Error fetching chats:", error);
+        }
+    };
 
 
     const handleSendMessage = () => {
@@ -79,7 +58,6 @@ const Chat = () => {
         setSendMessage(""); // Clear the input field after sending the message
     }
 
-
     return (
         <div className="container mx-auto h-screen max-w-2xl flex flex-col">
             {/* Header Section with User Info */}
@@ -87,11 +65,11 @@ const Chat = () => {
                 <div className="flex items-center gap-3">
                     <div className="avatar">
                         <div className="w-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                            <img alt="User avatar" src={targetUser.photoUrl} />
+                            <img alt="User avatar" src={''} />
                         </div>
                     </div>
                     <div>
-                        <h3 className="text-lg font-bold">{`${targetUser.firstName} ${targetUser.lastName}`}</h3>
+                        <h3 className="text-lg font-bold">{`User Name`}</h3>
                         <span className="text-sm text-green-500">Online</span>
                     </div>
                 </div>
@@ -102,17 +80,17 @@ const Chat = () => {
 
                 {
                     messages.map((message, index) => (
-                        <div key={index} className={`chat ${user._id === message.userId ? 'chat-end' : 'chat-start'} my-4`}>
+                        <div key={index} className={`chat ${userId === message.senderId ? 'chat-end' : 'chat-start'} my-4`}>
                             <div className="chat-image avatar">
                                 <div className="w-8 rounded-full">
                                     <img alt="Your avatar" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
                                 </div>
                             </div>
                             <div className="chat-header mb-1">
-                                {user?._id === message?.userId ? "You" : message?.firstName}
+                                {userId === message?.senderId ? "You" : message?.firstName}
                                 <time className="text-xs opacity-50 ml-2">12:47</time>
                             </div>
-                            <div className={`chat-bubble ${user._id === message.userId ? 'chat-bubble-primary' : 'chat-bubble-neutral'}`}>
+                            <div className={`chat-bubble ${userId === message.senderId ? 'chat-bubble-primary' : 'chat-bubble-neutral'}`}>
                                 {message?.message}
                                 <span className="ml-2 inline-flex">
                                     <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
