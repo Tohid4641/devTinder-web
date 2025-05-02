@@ -44,7 +44,8 @@ const Connections = () => {
                 <tr key={connection._id} className="hover:bg-base-200">
                   <td>
                     <div className="flex items-center gap-3">
-                      <div className="avatar ">
+                      <div className="avatar indicator">
+                      <span className={`indicator-item badge badge-xs ${connection.isOnline ? 'badge-success' : 'badge-error'}`}></span>
                         <div className="mask mask-squircle h-12 w-12 rounded-full">
                           <img
                             src={connection.photoUrl}
