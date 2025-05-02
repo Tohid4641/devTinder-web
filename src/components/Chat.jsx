@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createSocketConnection } from "../utils/socket";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -6,6 +6,7 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 
 const Chat = () => {
+    const messageContainerRef = useRef(null);
     const { targetUserId } = useParams();
     const user = useSelector(store => store?.user)
     const userId = user?._id;
@@ -30,6 +31,10 @@ const Chat = () => {
             socketClient.disconnect();
         }
     }, [userId, targetUserId]);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]); // This will trigger whenever messages are updated
 
     const fetchChats = async () => {
         try {
@@ -56,7 +61,14 @@ const Chat = () => {
         const socketClient = createSocketConnection();
         socketClient.emit("sendMessage", { firstName: user?.firstName, userId, targetUserId, message: sendMessage });
         setSendMessage(""); // Clear the input field after sending the message
+        scrollToBottom();
     }
+
+    const scrollToBottom = () => {
+        if (messageContainerRef.current) {
+            messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+        }
+    };
 
     return (
         <div className="container mx-auto h-screen max-w-2xl flex flex-col">
@@ -76,7 +88,7 @@ const Chat = () => {
             </div>
 
             {/* Chat Messages Section */}
-            <div className="bg-base-300 p-4 h-[calc(100vh-200px)] overflow-y-auto scrollbar-thin scrollbar-thumb-base-content/20 scrollbar-track-base-200">
+            <div ref={messageContainerRef} className="bg-base-300 p-4 h-[calc(100vh-200px)] overflow-y-auto scrollbar-thin scrollbar-thumb-base-content/20 scrollbar-track-base-200">
 
                 {
                     messages.map((message, index) => (
