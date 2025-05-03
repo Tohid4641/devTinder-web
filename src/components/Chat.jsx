@@ -110,7 +110,7 @@ const Chat = () => {
             <div ref={messageContainerRef} className="bg-base-300 p-4 h-[calc(100vh-200px)] overflow-y-auto scrollbar-thin scrollbar-thumb-base-content/20 scrollbar-track-base-200">
 
                 {
-                    messages.map((message, index) => (
+                    messages?.map((message, index) => (
                         <div key={index} className={`chat ${userId === message.senderId ? 'chat-end' : 'chat-start'} my-4`}>
                             <div className="chat-image avatar">
                                 <div className="w-8 rounded-full">
