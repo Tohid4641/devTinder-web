@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { createSocketConnection } from "../utils/socket";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
+import { updateConnectionStatus } from "../utils/connectionSlice";
 
 const Chat = () => {
     const messageContainerRef = useRef(null);
@@ -12,6 +13,7 @@ const Chat = () => {
     const userId = user?._id;
     const [messages, setMessages] = useState([]);
     const [sendMessage, setSendMessage] = useState("");
+    const dispatch = useDispatch();
 
     useEffect(() => {
         fetchChats();
@@ -26,6 +28,23 @@ const Chat = () => {
         socketClient.on("receivedMessage", ({ firstName, userId, message }) => {
             setMessages((messages) => [...messages, { senderId: userId, firstName, message }])
         })
+
+        socketClient.on("getOnlineUser", ({ userId }) => {
+            dispatch(
+                updateConnectionStatus({
+                    userId,
+                    isOnline: true,
+                })
+            );
+        });
+        socketClient.on("getOfflineUser", ({ userId }) => {
+            dispatch(
+                updateConnectionStatus({
+                    userId,
+                    isOnline: false,
+                })
+            );
+        });
 
         return () => {
             socketClient.disconnect();

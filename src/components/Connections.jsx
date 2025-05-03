@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addConnections } from "../utils/connectionSlice";
+import { addConnections, updateConnectionStatus } from "../utils/connectionSlice";
 import { BASE_URL } from "../utils/constants";
 import { Link } from "react-router-dom";
+import { createSocketConnection } from "../utils/socket";
 
 const Connections = () => {
   const dispatch = useDispatch();
@@ -23,6 +24,29 @@ const Connections = () => {
   useEffect(() => {
     if (connections.length === 0) {
       fetchConnections();
+    }
+
+    const socketClient = createSocketConnection();
+
+    socketClient.on("getOnlineUser", ({userId}) => {
+      dispatch(
+        updateConnectionStatus({
+          userId,
+          isOnline: true,
+        })
+      );
+    });
+    socketClient.on("getOfflineUser", ({userId}) => {
+      dispatch(
+        updateConnectionStatus({
+          userId,
+          isOnline: false,
+        })
+      );
+    });
+
+    return () => {
+      socketClient.disconnect();
     }
   }, []);
 
@@ -45,7 +69,7 @@ const Connections = () => {
                   <td>
                     <div className="flex items-center gap-3">
                       <div className="avatar indicator">
-                      <span className={`indicator-item badge badge-xs ${connection.isOnline ? 'badge-success' : 'badge-error'}`}></span>
+                        <span className={`indicator-item badge badge-xs ${connection.isOnline ? 'badge-success' : 'badge-error'}`}></span>
                         <div className="mask mask-squircle h-12 w-12 rounded-full">
                           <img
                             src={connection.photoUrl}
