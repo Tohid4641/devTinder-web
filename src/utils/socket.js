@@ -8,7 +8,7 @@ export const createSocketConnection = () => {
     if (location.hostname === 'localhost') {
         return io(BASE_URL, { auth: { token } });
     } else {
-        return io('/api/', { auth: { token }, path: '/api/socket.io' });
+        return io('/', { auth: { token }, path: '/api/api/socket.io' });
     }
 
 }
